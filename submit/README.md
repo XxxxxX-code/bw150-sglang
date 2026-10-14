@@ -101,7 +101,8 @@ max_total_num_tokens=421376, chunked_prefill_size=32768, max_prefill_tokens=3276
 │   ├─ capture_default_crash.sh                         出厂默认崩溃取证
 │   ├─ run_c3.sh / run_c3_full.sh / run_c4.sh / run_c4_full.sh / run_c5.sh / run_c6_full.sh
 │   │                         优化探索期的中间配置脚本（对应报告第 3 段的消融，
-│   │                         其中间原始日志未随本次重跑归档，见第 6 节第 3 项）
+│   │                         其中间原始日志未随本次重跑归档，
+│   │                         见 EXPERIMENTS.md 与 REPORT.md 附录「日志归档范围声明」）
 │   └─ start_server.sh / run_sharegpt.sh / sweep_sharegpt.sh / summarize.py   辅助脚本
 ├─ config/                    ← 模型配置 / 框架版本 / 并行策略 / 显存账本
 │   ├─ model_config.json      模型 config.json 原样副本
@@ -144,19 +145,3 @@ max_total_num_tokens=421376, chunked_prefill_size=32768, max_prefill_tokens=3276
 | 虚构成绩 | 所有数字均可由原始日志用 `python3 scripts/extract_sla.py` 与 `summarize_rounds.py` 重新生成 |
 | 更换 / 裁剪模型权重 | `logs/04_model_sha256.txt` 提供模型目录 32 个文件的完整 sha256；`/models` 只读挂载，未修改 |
 | 修改官方 benchmark 计时 / 统计逻辑 | **未修改**。`patch/` 为空目录；所有计时与统计均来自官方 `sglang.bench_serving` 原文 |
-
----
-
-## 6. 已知未完成项（如实列出）
-
-1. **精度只完成了 GSM8K**（96.35%，门槛 ≥95.0，相对基线 +0.16 pp）。
-   LiveCodeBench v6 / RealWorldQA / MathVision 的**官方评测脚本不在本镜像内**
-   （`lm_eval` / `lighteval` / `vlm_eval` / `evalplus` 全部 ModuleNotFoundError）。
-   按赛题「基于官方指定的数据版本、测试子集和评测脚本」的要求，
-   这三项需向主办方索取脚本后补测，**本包不声称其数值**。
-2. **≥3 张带命令行上下文与时间戳的截图**：本环境无图形界面，无法自行采集，需人工补。
-3. **中间过程配置的原始日志未归档**：报告第 3 段引用的参考配置 / B1 / C2 / C3 / C6
-   属于优化探索期的记录，其原始日志未随本次重跑一并归档；本轮只重跑了
-   **参与计分的两条链路（基线 B2 与最终配置）**。
-   报告中所有与成绩相关的数字均可由 `logs/` 下的原始日志复算，
-   过程数字已在 `REPORT.md` 附录「日志归档范围声明」中逐条标出。
