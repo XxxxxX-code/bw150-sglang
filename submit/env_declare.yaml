@@ -36,7 +36,7 @@ framework:
     aiter: "0.1.5+das185.dtk2604.torch2100.2608131714.gb0979d"
     causal_conv1d: "1.5.4+das185.dtk2604.torch2100.2608131033.g44ef50"
     numpy: 1.25.0
-  patch: "无框架/算子源码改动，故 patch/ 为空；全部优化通过启动参数与环境变量实现（见 config/ 与 run.sh）"
+  patch: "无框架/算子源码改动，故 patch/ 为空；全部优化通过启动参数与环境变量实现（见 config/ 与 scripts/run.sh）"
 
 model:
   name: Qwen3.8-27B
@@ -62,7 +62,7 @@ run:
     NCCL_MAX_NCHANNELS: 16
     ALLREDUCE_STREAM_WITH_COMPUTE: 1
     # —— 本次优化新增（官方 HCU cookbook 配方 + 并发解锁）——
-    # 逐项与 run.sh 顶部的 export 段一致；运行进程的真实取值见 logs/06_final_runtime_env.txt
+    # 逐项与 scripts/run.sh 顶部的 export 段一致；运行进程的真实取值见 logs/06_final_runtime_env.txt
     HIP_VISIBLE_DEVICES: "6,7"
     SGLANG_USE_AITER_LINEAR_ATTN: 1
     SGLANG_USE_CAUSAL_CONV1D: 1
@@ -78,7 +78,7 @@ run:
     # —— 实测会崩溃、已剔除，切勿写回（详见 REPORT.md §3.7）——
     # SGLANG_ENABLE_OVERLAP_PLAN_STREAM=1  -> fa3 未实现 update_verify_buffers_to_fill_after_draft，NotImplementedError
     # SGLANG_USE_FUSED_RMS_ROTARY=1        -> 与 EAGLE 投机路径不兼容，CUDA graph 捕获时 RuntimeError
-    # 注意：上面两条在实验早期曾被写入本文件，是错的；以 run.sh 为准。
+    # 注意：上面两条在实验早期曾被写入本文件，是错的；以 scripts/run.sh 为准。
 
 benchmark:
   tool: "sglang.bench_serving"

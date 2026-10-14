@@ -32,25 +32,30 @@
 
 ## 2. 一键复现
 
+在 `submit/` 目录下执行（脚本内的 `logs/`、`scripts/` 为相对 cwd 路径）：
+
 ```bash
 # 只起服务（最终配置）
-bash run.sh server
+bash scripts/run.sh server
 
 # ShareGPT 全档位 3 轮
-bash run.sh bench
+bash scripts/run.sh bench
 
 # 官方 SLA 两个场景
-bash run.sh sla
+bash scripts/run.sh sla
 
 # GSM8K 全量精度
-bash run.sh precision
+bash scripts/run.sh precision
 ```
 
-可覆盖项：`HIP_VISIBLE_DEVICES`（默认 `6,7`）、`MODEL`、`PORT`、`DATASET`、`TAG`。
-确切的完整启动参数见 `run.sh` 中的 `ARGS` 数组，**未省略任何 flag**。
+> 根下的 `run.sh` 是转发入口（`bash run.sh server` 等价），
+> 赛题 §5.1 规定的规范位置是 `scripts/run.sh`。
 
-> **保真性已核对（本次重跑实测）**：`run.sh` 不是「照记忆重写」的脚本 ——
-> 它在本次收尾时被**真跑过一次**（`bash run.sh server`），起服后的准入三行与原测量配置逐项一致：
+可覆盖项：`HIP_VISIBLE_DEVICES`（默认 `6,7`）、`MODEL`、`PORT`、`DATASET`、`TAG`。
+确切的完整启动参数见 `scripts/run.sh` 中的 `ARGS` 数组，**未省略任何 flag**。
+
+> **保真性已核对（本次重跑实测）**：`scripts/run.sh` 不是「照记忆重写」的脚本 ——
+> 它在本次收尾时被**真跑过一次**（`bash scripts/run.sh server`），起服后的准入三行与原测量配置逐项一致：
 > `max_total_num_tokens=421376, chunked_prefill_size=32768, max_prefill_tokens=32768,
 > max_running_requests=64, context_len=262144, available_gpu_mem=5.82 GB`。
 > 环境变量以该次运行进程的 `/proc/<pid>/environ` 直出为准（`logs/06_final_runtime_env.txt`）；
@@ -73,12 +78,14 @@ max_total_num_tokens=421376, chunked_prefill_size=32768, max_prefill_tokens=3276
 ## 3. 目录结构
 
 ```
-├─ run.sh                     ← 一键复现（最终配置完整启动参数）
+├─ run.sh                     ← 转发入口（等价于 scripts/run.sh）
+├─ requirements.txt           ← 依赖声明（脚本依赖 + 镜像预装的推理栈版本清单）
 ├─ REPORT.md                  ← 五段式正式报告（主文档，先看这个）
 ├─ env_declare.yaml           ← 环境声明（硬件/软件/框架/模型/采集方法）
 ├─ BASELINE_COMPLIANCE.md     ← 自测基线的合规性论证（为什么必须自测、偏差项理由）
 ├─ EXPERIMENTS.md             ← 实验台账（每条改动 vs 结果，含被推翻的结论）
 ├─ scripts/                   ← 启停与测量脚本
+│   ├─ run.sh                 一键复现（最终配置完整启动参数，赛题 §5.1 规范位置）
 │   ├─ start_opt.sh           参数化启动器（默认=参考配置，可覆盖）
 │   ├─ start_baseline.sh      出厂默认基线启动器（MODE=default|b1|b2）
 │   ├─ start_reference.sh     第三方参考配置（原样保留，供溯源）
@@ -86,6 +93,7 @@ max_total_num_tokens=421376, chunked_prefill_size=32768, max_prefill_tokens=3276
 │   ├─ sla_probe.py           官方 §4.1.3 SLA 最大并发探测
 │   ├─ grid.sh / screen.sh    全档位测量 / 快速筛选
 │   ├─ run_gsm8k.py           精度校验（sglang 自带评测器，对齐官方口径）
+│   ├─ env_c3_kernels.md / .txt  内核与运行时 env 开关包的逐条依据（对照镜像内官方 HCU 配方）
 │   ├─ extract_sla.py         从原始日志汇总跨配置 SLA 总表
 │   ├─ summarize_rounds.py    多轮网格汇总（中位/min/max/极差%）
 │   ├─ run_b2_sla.sh / run_b2_cap.sh / run_b2_side.sh   基线侧 SLA 探测

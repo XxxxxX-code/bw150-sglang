@@ -27,8 +27,8 @@
 | 权重来源 | 容器内 `/models/Qwen3.8-27B`（**只读挂载，未做任何替换或裁剪**；目录内文件清单与逐文件 sha256 见 `submit/logs/04_model_sha256.txt`，可据此核对上游同一版本）。目录内无来源标记文件，**具体下载渠道以主办方提供为准，本报告不作推断** |
 | 权重 sha256（前 8 位） | **50851bab**（清单指纹，32 个文件；算法 = 对全部 `sha256  文件名` 行排序后拼接再取 sha256，明细见 `submit/logs/04_model_sha256.txt`） |
 | 精度 | BF16 |
-| 启动命令全文 | `submit/run.sh`（`ARGS` 数组，未省略任何 flag；亦见 `submit/config/`） |
-| 关键环境变量参数 | `submit/run.sh` 顶部 export 段 与 `env_declare.yaml` 的 `run.key_env` |
+| 启动命令全文 | `submit/scripts/run.sh`（`ARGS` 数组，未省略任何 flag；亦见 `submit/config/`） |
+| 关键环境变量参数 | `submit/scripts/run.sh` 顶部 export 段 与 `env_declare.yaml` 的 `run.key_env` |
 | benchmark 脚本来源与版本 | `sglang.bench_serving`（SGLang 0.5.12 自带，**未做任何修改**） |
 | 并发档位 | ShareGPT：1 / 4 / 16 / 32 / 64；SLA random 4K/1K：1 / 4 / 8 / 16 / 32 / 64；SLA random 64K/1K：1 / 2 / 4 / 5 / 6 |
 | 预热轮次 | ShareGPT 每档 `--warmup-requests 5`；SLA 探测 `--warmup 0`（两侧同口径，为的是让 64K 档的 n 可比） |
@@ -403,8 +403,8 @@ B2 相对官方 BW100 只快 +3.4% ~ +25.5%，且随并发升高收敛到 6% 以
 逐档判定「全部请求成功 且 TTFT < 门槛 且 TPOT < 门槛」，取满足的最大并发。
 原始日志归档在 `submit/logs/10_sla/{b2,final}_{4k,64k}/`（按日志自身记录的 `random_input_len` 分场景）；
 跨配置总表由 `scripts/extract_sla.py` 从原始日志直接生成
-（必须从日志的 `benchmark_args` 读 `random_input_len` 分场景 —— 逐档的 `SUMMARY.md`
-会被同 tag 的后一次探测覆盖，只有原始日志还留着场景信息）。
+（必须从日志的 `benchmark_args` 读 `random_input_len` 分场景 —— 探测脚本产出的
+`result/sla/<tag>/SUMMARY.md` 会被同 tag 的后一次探测覆盖，只有原始日志还留着场景信息）。
 
 > **关于 tag 命名**（避免评审对不上文件）：本方案最终配置 = 实验阶段的 **C4**，
 > 二者启动参数逐项相同。本轮重跑统一用 tag **`final`**（本方案）与 **`b2sla`**（基线），

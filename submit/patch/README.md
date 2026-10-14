@@ -14,6 +14,6 @@
          <(同镜像原始副本)
 
     # 3. 启动脚本即全部改动面
-    cat submit/run.sh
+    cat submit/scripts/run.sh
 
 对应赛题允许的优化类别：并行与调度 / KV Cache 与显存管理 / 批处理与调度算法 / 算子内核替换。

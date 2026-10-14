@@ -1,0 +1,40 @@
+# ============================================================================
+# 依赖声明（赛题 notes §5.1 要求的 requirements.txt）
+#
+# 推理栈（sglang / torch / triton / flash_attn / lightop / aiter 等）全部预装在
+# 赛题指定的子赛道 B 官方镜像内，**版本已锁定，复现时不要 pip 升级**：
+#   sglang:0.5.12-ubuntu22.04-dtk2604-py3.10
+#
+# 本文件分两部分：
+#   ① 运行 benchmark / SLA / 精度脚本所需的第三方依赖（见下，容器内已具备）
+#   ② 推理框架与算子的版本清单（供复现核对，全部为镜像自带）
+# ============================================================================
+
+# --------------------------- ① 脚本依赖 -------------------------------------
+# scripts/sla_probe.py、scripts/run_gsm8k.py 等测量脚本的第三方依赖
+requests>=2.28
+numpy==1.25.0
+datasets==5.0.1          # scripts/run_gsm8k.py 加载 GSM8K 用
+transformers==5.6.0      # 分词与 chat template
+
+# --------------------------- ② 推理栈（镜像预装，版本锁定）-------------------
+# 以下包在镜像内已安装，**勿 pip install / 勿升级**。
+# 版本后缀 +das185.dtk2604.torch2100 表示海光 DTK 2604 的定制构建，
+# PyPI 上不存在同版本，pip 强行安装会破坏镜像。
+#
+# sglang==0.5.12+das185.dtk2604.torch2100.2608121934.gcbf025
+# torch==2.10.0+das.opt1.dtk2604.2608131652.g28498c
+# triton==3.6.0+das185.dtk2604.torch2100.2608131719.gb796b1
+# flash-attn==2.8.3+das185.dtk2604.torch2100.2608132155.g9febea
+# sglang-kernel==0.4.2.post2+das185.dtk2604.torch2100.2608121934.gcbf025
+# lightop==0.6.0+das.dtk2604.torch2100.2608121706.g09a4f3
+# aiter==0.1.5+das185.dtk2604.torch2100.2608131714.gb0979d
+# causal-conv1d==1.5.4+das185.dtk2604.torch2100.2608131033.g44ef50
+
+# 版本核对命令（应与本文件注释逐条一致）：
+#   python3 -c "import importlib.metadata as m; [print(n, m.version(n)) for n in
+#     ['sglang','torch','triton','transformers','flash-attn','sglang-kernel',
+#      'lightop','aiter','causal-conv1d','numpy','requests']]"
+#
+# 完整版本快照（含宿主驱动 / DTK / 容器 ID）见 env_declare.yaml 与
+# logs/01_hardware_driver_info.log。
