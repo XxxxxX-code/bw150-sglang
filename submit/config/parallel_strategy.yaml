@@ -1,0 +1,37 @@
+# 并行策略（与本方案的全部测量一致）
+parallel:
+  tp_size: 2                  # Tensor Parallel = 2（两张卡各占一半权重）
+  pp_size: 1
+  dp_size: 1
+  ep_size: 1                  # 本模型是 dense、无 MoE，不涉及专家并行
+  numa_node: [0, 0]           # 两张卡同在 NUMA Node 0（rocm-smi --showtopo 实测）
+  interconnect: "HSL 直连（1 hop）"   # HCU6 <-> HCU7
+  world_size: 2
+
+# 显存账本（起服日志实测值，见 logs/05_server_final.log）
+memory:
+  mem_fraction_static: 0.85
+  kv_cache_dtype: bfloat16
+  page_size: 64               # DCU 上 fa3 kernel 的硬要求
+  max_total_num_tokens: 421376
+  kv_cache_k_gb: 6.43
+  kv_cache_v_gb: 6.43
+  max_running_requests: 64
+  max_mamba_cache_size: 64
+  mamba_ssm_dtype: bfloat16   # ssm_state 由 fp32 减半：6.40 GB -> 2.29 GB
+  available_gpu_mem_gb: 5.82
+
+# 调度与批处理
+scheduling:
+  mamba_scheduler_strategy: no_buffer
+  disable_radix_cache: true   # 与上一行成对使用，否则 extra_buffer+disable_radix_cache 会 ValueError
+  chunked_prefill_size: 32768
+  max_prefill_tokens: 32768
+  context_length: 262144      # 必须 >= 66560，否则 64K/1K 场景被拒
+
+# 投机解码
+speculative:
+  algorithm: EAGLE
+  num_steps: 3
+  eagle_topk: 1
+  num_draft_tokens: 4

@@ -1,0 +1,9 @@
+[start_opt] TAG=envcheck strategy=no_buffer mem_frac=0.85 ctx=262144
+[start_opt] kv=bfloat16 spec_steps=3 graph_bs=64
+[start_opt] EXTRA_ENV=SGLANG_USE_AITER_LINEAR_ATTN=1 SGLANG_USE_CAUSAL_CONV1D=1 SGLANG_USE_AITER_AR=1 USE_HCU_CUSTOM_ALLREDUCE=1 HIP_KERNEL_EVENT_SYSTENFENCE=1 GLIBC_TUNABLES=glibc.rtld.optional_static_tls=0x40000 HIP_KERNEL_BATCH_CEILING=100 GPU_FORCE_BLIT_COPY_SIZE=16 HSA_KERNARG_POOL_SIZE=8388608 ROC_AQL_QUEUE_SIZE=131072 GPU_MAX_HW_QUEUES=4
+[start_opt] EXTRA_ARGS=--disable-radix-cache --max-running-requests 64 --max-mamba-cache-size 64
+       --mamba-ssm-dtype bfloat16
+       --chunked-prefill-size 32768 --max-prefill-tokens 32768
+[start_opt] log -> /data/baseline/logs/server_envcheck.log
+/data/baseline/scripts/start_opt.sh: line 67: 406863 Killed                  python3 -u -m sglang.launch_server --model-path "$MODEL_PATH" --host 0.0.0.0 --port "$PORT" --served-model-name Qwen3.8-27B --trust-remote-code --dtype bfloat16 --tp-size 2 --pp-size 1 --numa-node 0 0 --attention-backend fa3 --mm-attention-backend fa3 --mamba-scheduler-strategy "$MAMBA_STRATEGY" --cuda-graph-max-bs "$CUDA_GRAPH_BS" --kv-cache-dtype "$KV_DTYPE" --page-size 64 --context-length "$CONTEXT_LEN" --mem-fraction-static "$MEM_FRACTION" --reasoning-parser qwen3 --tool-call-parser qwen3_coder --speculative-algorithm EAGLE --speculative-num-steps "$SPEC_STEPS" --speculative-eagle-topk 1 --speculative-num-draft-tokens "$((SPEC_STEPS + 1))" ${EXTRA_ARGS:-} 2>&1
+     406865 Done                    | tee "$LOG"

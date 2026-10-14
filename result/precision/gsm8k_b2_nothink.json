@@ -1,0 +1,20 @@
+{
+  "tag": "b2",
+  "score": 0.9619482496194824,
+  "score_pct": 96.1948,
+  "num_examples": 1314,
+  "num_shots": 5,
+  "thinking": false,
+  "reasoning_effort": null,
+  "temperature": 0.0,
+  "max_tokens": 8192,
+  "num_threads": 32,
+  "elapsed_sec": 477.4,
+  "threshold": 95.0,
+  "pass": true,
+  "usage_completion_tokens": {
+    "n": 1314,
+    "mean": 151.74429223744292,
+    "max": 1188
+  }
+}

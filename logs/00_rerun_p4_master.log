@@ -1,0 +1,259 @@
+######## 补跑开始 2026-10-14 13:24:38 ########
+GPUS=6,7 PORT=30000  numa_balancing=0
+env_c3_kernels.txt = SGLANG_USE_AITER_LINEAR_ATTN=1 SGLANG_USE_CAUSAL_CONV1D=1 SGLANG_USE_AITER_AR=1 USE_HCU_CUSTOM_ALLREDUCE=1 HIP_KERNEL_EVENT_SYSTENFENCE=1 GLIBC_TUNABLES=glibc.rtld.optional_static_tls=0x40000 HIP_KERNEL_BATCH_CEILING=100 GPU_FORCE_BLIT_COPY_SIZE=16 HSA_KERNARG_POOL_SIZE=8388608 ROC_AQL_QUEUE_SIZE=131072 GPU_MAX_HW_QUEUES=4
+gsm8k 数据: 1319 行
+
+################ A 基线 B2 启动（仅为补 GSM8K） @ 2026-10-14 13:24:38
+[restart] no running server
+[restart] TAG=b2all start_script=/data/baseline/scripts/start_baseline.sh
+[restart] launched pid 386423, waiting for health on port 30000 ...
+[restart] HEALTHY at 13:26:20. 内存账本:
+[2026-10-14 13:25:52 TP1] Mamba Cache is allocated. max_mamba_cache_size: 121, conv_state size: 0.17GB, ssm_state size: 8.58GB 
+[2026-10-14 13:25:52 TP0] Mamba Cache is allocated. max_mamba_cache_size: 121, conv_state size: 0.17GB, ssm_state size: 8.58GB 
+[2026-10-14 13:25:52 TP1] KV Cache is allocated. #tokens: 320192, K size: 4.89 GB, V size: 4.89 GB
+[2026-10-14 13:25:52 TP0] KV Cache is allocated. #tokens: 320192, K size: 4.89 GB, V size: 4.89 GB
+[2026-10-14 13:26:07 TP0] max_total_num_tokens=320192, chunked_prefill_size=8192, max_prefill_tokens=16384, max_running_requests=121, context_len=262144, available_gpu_mem=14.96 GB
+[restart] done 2026-10-14 13:26:20
+
+################ A.1 基线 GSM8K 全量 @ 2026-10-14 13:26:20
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+ChatCompletionSampler initialized with self.system_message=None self.temperature=0.0 self.max_tokens=8192 self.reasoning_effort=None self.extra_body={'chat_template_kwargs': {'enable_thinking': False}}
+[gsm8k] tag=b2 n=1314 shots=5 mode=no-thinking temp=0 max_tokens=8192 threads=32
+  0%|          | 0/1314 [00:00<?, ?it/s]  0%|          | 1/1314 [00:13<4:58:39, 13.65s/it]  0%|          | 3/1314 [00:23<2:34:44,  7.08s/it]  0%|          | 4/1314 [00:26<2:08:52,  5.90s/it]  1%|          | 9/1314 [00:31<51:22,  2.36s/it]    3%|▎         | 33/1314 [00:57<28:06,  1.32s/it]  6%|▋         | 83/1314 [01:53<23:57,  1.17s/it]  9%|▉         | 115/1314 [01:56<14:55,  1.34it/s] 13%|█▎        | 177/1314 [02:04<08:05,  2.34it/s] 23%|██▎       | 300/1314 [03:07<08:03,  2.10it/s] 28%|██▊       | 367/1314 [03:13<05:33,  2.84it/s] 37%|███▋      | 490/1314 [03:13<02:39,  5.16it/s] 38%|███▊      | 501/1314 [03:22<03:04,  4.41it/s] 39%|███▊      | 509/1314 [03:27<03:17,  4.07it/s] 39%|███▊      | 509/1314 [03:40<03:17,  4.07it/s] 40%|████      | 530/1314 [03:44<04:28,  2.92it/s] 44%|████▍     | 583/1314 [03:51<03:11,  3.81it/s] 46%|████▌     | 607/1314 [04:02<03:32,  3.33it/s] 48%|████▊     | 631/1314 [04:05<03:01,  3.76it/s] 50%|████▉     | 653/1314 [04:06<02:23,  4.60it/s] 50%|████▉     | 656/1314 [04:12<03:06,  3.52it/s] 51%|█████     | 671/1314 [04:21<03:56,  2.71it/s] 52%|█████▏    | 683/1314 [04:22<03:06,  3.38it/s] 53%|█████▎    | 692/1314 [04:23<02:53,  3.59it/s] 54%|█████▎    | 706/1314 [04:25<02:17,  4.42it/s] 55%|█████▍    | 717/1314 [04:34<03:46,  2.64it/s] 56%|█████▋    | 741/1314 [04:37<02:37,  3.65it/s] 56%|█████▋    | 741/1314 [04:50<02:37,  3.65it/s] 57%|█████▋    | 745/1314 [05:02<07:46,  1.22it/s] 57%|█████▋    | 750/1314 [05:12<09:14,  1.02it/s] 63%|██████▎   | 827/1314 [05:13<02:01,  4.01it/s] 65%|██████▍   | 850/1314 [05:14<01:33,  4.97it/s] 65%|██████▍   | 853/1314 [05:18<01:53,  4.07it/s] 65%|██████▌   | 855/1314 [05:23<02:31,  3.02it/s] 66%|██████▌   | 862/1314 [05:29<03:17,  2.29it/s] 66%|██████▋   | 872/1314 [05:30<02:34,  2.86it/s] 67%|██████▋   | 878/1314 [05:36<03:20,  2.17it/s] 68%|██████▊   | 890/1314 [06:21<11:10,  1.58s/it] 75%|███████▍  | 980/1314 [06:23<01:57,  2.84it/s] 78%|███████▊  | 1026/1314 [06:24<01:06,  4.32it/s] 79%|███████▊  | 1034/1314 [06:28<01:12,  3.85it/s] 79%|███████▉  | 1043/1314 [06:32<01:15,  3.57it/s] 81%|████████  | 1067/1314 [06:35<00:58,  4.20it/s] 82%|████████▏ | 1073/1314 [06:42<01:18,  3.09it/s] 82%|████████▏ | 1082/1314 [06:52<01:48,  2.14it/s] 84%|████████▎ | 1098/1314 [06:54<01:15,  2.86it/s] 85%|████████▍ | 1114/1314 [06:54<00:49,  4.05it/s] 85%|████████▌ | 1118/1314 [06:56<00:52,  3.73it/s] 86%|████████▌ | 1125/1314 [06:59<00:56,  3.33it/s] 86%|████████▋ | 1134/1314 [07:02<00:58,  3.08it/s] 88%|████████▊ | 1155/1314 [07:06<00:40,  3.96it/s] 88%|████████▊ | 1157/1314 [07:10<00:58,  2.67it/s] 88%|████████▊ | 1161/1314 [07:12<00:56,  2.69it/s] 88%|████████▊ | 1162/1314 [07:25<02:29,  1.01it/s] 89%|████████▉ | 1172/1314 [07:43<03:12,  1.35s/it] 96%|█████████▌| 1259/1314 [07:46<00:13,  4.06it/s] 96%|█████████▌| 1261/1314 [07:49<00:14,  3.59it/s] 98%|█████████▊| 1284/1314 [07:52<00:06,  4.40it/s] 99%|█████████▊| 1297/1314 [07:54<00:03,  4.47it/s]100%|█████████▉| 1313/1314 [07:57<00:00,  4.80it/s]100%|██████████| 1314/1314 [07:57<00:00,  2.75it/s]
+==============================================================
+GSM8K tag=b2  mode=no-thinking
+  score = 0.9619  (96.19%)
+  examples = 1314   elapsed = 477.4s
+  门槛 >=95.0  ->  PASS   (官方公布基线 97.0，仅作参考)
+==============================================================
+结果已写入 /data/baseline/result/precision/gsm8k_b2_nothink.json
+
+################ A.2 基线 64K 容量墙取证（conc 4/5/6，n=6） @ 2026-10-14 13:34:52
+# SLA 探测 tag=b2sla 场景=64k (65536in/1024out)  SLA: TTFT<20.0s 且 TPOT<60.0ms
+--- conc=4 n=6 start 13:34:52 ---
+    TPS=46.51 TTFT=9630.78ms TPOT=63.2ms -> FAIL(TPOT) [114s]
+--- conc=5 n=6 start 13:36:46 ---
+    TPS=46.6 TTFT=10479.24ms TPOT=69.02ms -> FAIL(TPOT) [119s]
+--- conc=6 n=6 start 13:38:46 ---
+    TPS=46.67 TTFT=13248.71ms TPOT=68.93ms -> FAIL(TPOT) [114s]
+
+## 结果
+
+| 并发 | TPS | TTFT med (ms) | TPOT med (ms) | SLA | 未达标项 |
+|---|---|---|---|---|---|
+| 4 | 46.51 | 9630.8 | 63.20 | ❌ | TPOT |
+| 5 | 46.60 | 10479.2 | 69.02 | ❌ | TPOT |
+| 6 | 46.67 | 13248.7 | 68.93 | ❌ | TPOT |
+
+**SLA 最大并发 = 0**  (官方 BW100 基线: 0)
+
+################ A.3 停基线服 @ 2026-10-14 13:40:39
+
+################ B 最终配置 C4 启动 @ 2026-10-14 13:40:49
+[restart] no running server
+[restart] TAG=final start_script=/data/baseline/scripts/start_opt.sh
+[restart] launched pid 391051, waiting for health on port 30000 ...
+[restart] HEALTHY at 13:42:21. 内存账本:
+[2026-10-14 13:41:51 TP0] Mamba Cache is allocated. max_mamba_cache_size: 64, conv_state size: 0.09GB, ssm_state size: 2.29GB intermediate_ssm_state_cache size: 9.14GB intermediate_conv_window_cache size: 0.36GB 
+[2026-10-14 13:41:51 TP1] KV Cache is allocated. #tokens: 421376, K size: 6.43 GB, V size: 6.43 GB
+[2026-10-14 13:41:51 TP0] KV Cache is allocated. #tokens: 421376, K size: 6.43 GB, V size: 6.43 GB
+[2026-10-14 13:42:06 TP0] KV Cache is allocated. #tokens: 421376, K size: 0.40 GB, V size: 0.40 GB
+[2026-10-14 13:42:06 TP1] KV Cache is allocated. #tokens: 421376, K size: 0.40 GB, V size: 0.40 GB
+[2026-10-14 13:42:11 TP0] max_total_num_tokens=421376, chunked_prefill_size=32768, max_prefill_tokens=32768, max_running_requests=64, context_len=262144, available_gpu_mem=5.82 GB
+[restart] done 2026-10-14 13:42:21
+
+################ B.1 最终 4K/1K SLA 全档 @ 2026-10-14 13:42:21
+# SLA 探测 tag=final 场景=4k (4096in/1024out)  SLA: TTFT<5.0s 且 TPOT<50.0ms
+--- conc=1 n=8 start 13:42:21 ---
+    TPS=68.25 TTFT=392.61ms TPOT=13.52ms -> PASS [124s]
+--- conc=4 n=8 start 13:44:25 ---
+    TPS=214.01 TTFT=1138.55ms TPOT=15.29ms -> PASS [69s]
+--- conc=8 n=16 start 13:45:33 ---
+    TPS=318.92 TTFT=779.16ms TPOT=18.65ms -> PASS [71s]
+--- conc=16 n=32 start 13:46:45 ---
+    TPS=457.03 TTFT=3066.66ms TPOT=24.43ms -> PASS [78s]
+--- conc=32 n=64 start 13:48:03 ---
+    TPS=574.35 TTFT=1344.34ms TPOT=39.21ms -> PASS [97s]
+--- conc=64 n=64 start 13:49:40 ---
+    TPS=662.1 TTFT=14545.47ms TPOT=40.63ms -> FAIL(TTFT) [94s]
+
+## 结果
+
+| 并发 | TPS | TTFT med (ms) | TPOT med (ms) | SLA | 未达标项 |
+|---|---|---|---|---|---|
+| 1 | 68.25 | 392.6 | 13.52 | ✅ |  |
+| 4 | 214.01 | 1138.5 | 15.29 | ✅ |  |
+| 8 | 318.92 | 779.2 | 18.65 | ✅ |  |
+| 16 | 457.03 | 3066.7 | 24.43 | ✅ |  |
+| 32 | 574.35 | 1344.3 | 39.21 | ✅ |  |
+| 64 | 662.10 | 14545.5 | 40.63 | ❌ | TTFT |
+
+**SLA 最大并发 = 32**  (官方 BW100 基线: 1)
+
+################ B.2 最终 64K/1K SLA（1..6，统一 n=6） @ 2026-10-14 13:51:14
+# SLA 探测 tag=final 场景=64k (65536in/1024out)  SLA: TTFT<20.0s 且 TPOT<60.0ms
+--- conc=1 n=6 start 13:51:14 ---
+    TPS=43.25 TTFT=6518.11ms TPOT=10.82ms -> PASS [124s]
+--- conc=2 n=6 start 13:53:18 ---
+    TPS=54.04 TTFT=8810.59ms TPOT=16.3ms -> PASS [101s]
+--- conc=3 n=6 start 13:54:59 ---
+    TPS=56.83 TTFT=11821.9ms TPOT=29.38ms -> PASS [108s]
+--- conc=4 n=6 start 13:56:47 ---
+    TPS=62.97 TTFT=12270.48ms TPOT=37.76ms -> PASS [102s]
+--- conc=5 n=6 start 13:58:28 ---
+    TPS=61.06 TTFT=12278.52ms TPOT=47.88ms -> PASS [101s]
+--- conc=6 n=6 start 14:00:10 ---
+    TPS=61.37 TTFT=15508.13ms TPOT=47.59ms -> PASS [106s]
+
+## 结果
+
+| 并发 | TPS | TTFT med (ms) | TPOT med (ms) | SLA | 未达标项 |
+|---|---|---|---|---|---|
+| 1 | 43.25 | 6518.1 | 10.82 | ✅ |  |
+| 2 | 54.04 | 8810.6 | 16.30 | ✅ |  |
+| 3 | 56.83 | 11821.9 | 29.38 | ✅ |  |
+| 4 | 62.97 | 12270.5 | 37.76 | ✅ |  |
+| 5 | 61.06 | 12278.5 | 47.88 | ✅ |  |
+| 6 | 61.37 | 15508.1 | 47.59 | ✅ |  |
+
+**SLA 最大并发 = 6**  (官方 BW100 基线: 0)
+
+################ B.3 最终 ShareGPT 全档 3 轮 @ 2026-10-14 14:01:56
+### GRID TAG=final ROUNDS=3 start 2026-10-14 14:01:56
+=== final conc=1 round=1 n=100 start 14:01:56 ===
+  Successful requests:                     100       
+  Benchmark duration (s):                  328.77    
+  Output token throughput (tok/s):         67.96     
+  Median TTFT (ms):                        197.85    
+  Median TPOT (ms):                        14.44     
+=== final conc=1 round=1 done 14:08:07 ===
+=== final conc=4 round=1 n=300 start 14:08:07 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  282.27    
+  Output token throughput (tok/s):         220.50    
+  Median TTFT (ms):                        237.86    
+  Median TPOT (ms):                        17.10     
+=== final conc=4 round=1 done 14:13:37 ===
+=== final conc=16 round=1 n=300 start 14:13:37 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  127.83    
+  Output token throughput (tok/s):         486.90    
+  Median TTFT (ms):                        267.21    
+  Median TPOT (ms):                        30.52     
+=== final conc=16 round=1 done 14:16:27 ===
+=== final conc=32 round=1 n=300 start 14:16:27 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  94.82     
+  Output token throughput (tok/s):         656.40    
+  Median TTFT (ms):                        375.54    
+  Median TPOT (ms):                        44.86     
+=== final conc=32 round=1 done 14:18:43 ===
+=== final conc=64 round=1 n=300 start 14:18:43 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  77.31     
+  Output token throughput (tok/s):         805.06    
+  Median TTFT (ms):                        384.53    
+  Median TPOT (ms):                        66.20     
+=== final conc=64 round=1 done 14:20:47 ===
+=== final conc=1 round=2 n=100 start 14:20:47 ===
+  Successful requests:                     100       
+  Benchmark duration (s):                  328.66    
+  Output token throughput (tok/s):         67.98     
+  Median TTFT (ms):                        197.08    
+  Median TPOT (ms):                        14.43     
+=== final conc=1 round=2 done 14:27:04 ===
+=== final conc=4 round=2 n=300 start 14:27:04 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  282.04    
+  Output token throughput (tok/s):         220.68    
+  Median TTFT (ms):                        236.14    
+  Median TPOT (ms):                        17.16     
+=== final conc=4 round=2 done 14:32:39 ===
+=== final conc=16 round=2 n=300 start 14:32:39 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  126.43    
+  Output token throughput (tok/s):         492.31    
+  Median TTFT (ms):                        266.34    
+  Median TPOT (ms):                        30.14     
+=== final conc=16 round=2 done 14:35:29 ===
+=== final conc=32 round=2 n=300 start 14:35:29 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  96.34     
+  Output token throughput (tok/s):         646.08    
+  Median TTFT (ms):                        375.36    
+  Median TPOT (ms):                        46.37     
+=== final conc=32 round=2 done 14:37:58 ===
+=== final conc=64 round=2 n=300 start 14:37:58 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  78.33     
+  Output token throughput (tok/s):         794.64    
+  Median TTFT (ms):                        416.65    
+  Median TPOT (ms):                        68.20     
+=== final conc=64 round=2 done 14:40:03 ===
+=== final conc=1 round=3 n=100 start 14:40:03 ===
+  Successful requests:                     100       
+  Benchmark duration (s):                  328.98    
+  Output token throughput (tok/s):         67.92     
+  Median TTFT (ms):                        197.95    
+  Median TPOT (ms):                        14.46     
+=== final conc=1 round=3 done 14:46:15 ===
+=== final conc=4 round=3 n=300 start 14:46:15 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  283.10    
+  Output token throughput (tok/s):         219.86    
+  Median TTFT (ms):                        236.12    
+  Median TPOT (ms):                        17.14     
+=== final conc=4 round=3 done 14:51:51 ===
+=== final conc=16 round=3 n=300 start 14:51:51 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  128.75    
+  Output token throughput (tok/s):         483.43    
+  Median TTFT (ms):                        267.33    
+  Median TPOT (ms):                        30.76     
+=== final conc=16 round=3 done 14:54:46 ===
+=== final conc=32 round=3 n=300 start 14:54:46 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  96.09     
+  Output token throughput (tok/s):         647.74    
+  Median TTFT (ms):                        347.86    
+  Median TPOT (ms):                        45.91     
+=== final conc=32 round=3 done 14:57:04 ===
+=== final conc=64 round=3 n=300 start 14:57:04 ===
+  Successful requests:                     300       
+  Benchmark duration (s):                  77.62     
+  Output token throughput (tok/s):         801.83    
+  Median TTFT (ms):                        390.51    
+  Median TPOT (ms):                        67.45     
+=== final conc=64 round=3 done 14:59:07 ===
+GRID DONE final 2026-10-14 14:59:07
+
+################ B.4 最终 GSM8K 全量 @ 2026-10-14 14:59:07
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/usr/local/lib/python3.10/dist-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+ChatCompletionSampler initialized with self.system_message=None self.temperature=0.0 self.max_tokens=8192 self.reasoning_effort=None self.extra_body={'chat_template_kwargs': {'enable_thinking': False}}
+[gsm8k] tag=final n=1314 shots=5 mode=no-thinking temp=0 max_tokens=8192 threads=32
+  0%|          | 0/1314 [00:00<?, ?it/s]  0%|          | 1/1314 [00:11<4:01:16, 11.03s/it]  0%|          | 3/1314 [00:19<2:07:59,  5.86s/it]  0%|          | 4/1314 [00:19<1:30:14,  4.13s/it]  1%|          | 9/1314 [00:23<37:45,  1.74s/it]    3%|▎         | 33/1314 [00:44<21:38,  1.01s/it]  6%|▋         | 83/1314 [03:04<46:47,  2.28s/it]  9%|▉         | 115/1314 [06:04<1:11:52,  3.60s/it]100%|█████████▉| 1313/1314 [06:04<00:00,  6.12it/s] 100%|██████████| 1314/1314 [06:04<00:00,  3.60it/s]
+==============================================================
+GSM8K tag=final  mode=no-thinking
+  score = 0.9635  (96.35%)
+  examples = 1314   elapsed = 364.6s
+  门槛 >=95.0  ->  PASS   (官方公布基线 97.0，仅作参考)
+==============================================================
+结果已写入 /data/baseline/result/precision/gsm8k_final_nothink.json
+
+################ C 收尾：停服 + 生成时间线 @ 2026-10-14 15:05:47
+-> logs/13_rerun_p4_timeline.txt
+######## 补跑全部成功 2026-10-14 15:05:55 ########

@@ -1,0 +1,39 @@
+# 框架与后端版本（容器内实测）
+framework:
+  name: SGLang
+  version: "0.5.12+das185.dtk2604.torch2100.2608121934.gcbf025"
+  torch: "2.10.0+das.opt1.dtk2604.2608131652.g28498c"
+  triton: "3.6.0+das185.dtk2604.torch2100.2608131719.gb796b1"
+  transformers: "5.6.0"
+  flash_attn: "2.8.3+das185.dtk2604.torch2100.2608132155.g9febea"
+  sglang_kernel: "0.4.2.post2+das185.dtk2604.torch2100.2608121934.gcbf025"
+  lightop: "0.6.0+das.dtk2604.torch2100.2608121706.g09a4f3"
+  aiter: "0.1.5+das185.dtk2604.torch2100.2608131714.gb0979d"
+  causal_conv1d: "1.5.4+das185.dtk2604.torch2100.2608131033.g44ef50"
+  DTK: "26.04-rc4"
+  driver: "6.4.0-V1.7.0.20260810"
+
+backends:
+  attention: fa3             # HCU 白名单 {fa3, hcu_mla, triton, nsa, dsv4}，本模型只能用 fa3
+  mm_attention: fa3
+  linear_attn: triton        # DCU 上只能是 triton，cutedsl/flashinfer 直接 raise
+  mamba: triton              # 同上
+
+# 相对参考配置新增的环境变量（「内核包」+ HCU cookbook 底层调优）
+env:
+  SGLANG_USE_AITER_LINEAR_ATTN: "1"    # 48 层 GDN 线性注意力走 aiter
+  SGLANG_USE_CAUSAL_CONV1D: "1"
+  SGLANG_USE_AITER_AR: "1"
+  USE_HCU_CUSTOM_ALLREDUCE: "1"
+  HIP_KERNEL_EVENT_SYSTENFENCE: "1"
+  GLIBC_TUNABLES: "glibc.rtld.optional_static_tls=0x40000"
+  HIP_KERNEL_BATCH_CEILING: "100"
+  GPU_FORCE_BLIT_COPY_SIZE: "16"
+  HSA_KERNARG_POOL_SIZE: "8388608"
+  ROC_AQL_QUEUE_SIZE: "131072"
+  GPU_MAX_HW_QUEUES: "4"
+
+# 明确未采用（实测崩溃或无效，详见 REPORT.md §3.7）
+excluded_env:
+  SGLANG_USE_FUSED_RMS_ROTARY: "1 -> 与 EAGLE 投机路径不兼容，CUDA graph 捕获时 RuntimeError"
+  SGLANG_ENABLE_OVERLAP_PLAN_STREAM: "1 -> 要求 fa3 实现 update_verify_buffers_to_fill_after_draft，未实现"

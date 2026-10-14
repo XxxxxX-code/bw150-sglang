@@ -1,0 +1,97 @@
+# 环境声明（对应 notes.docx §5.2 模板，字段名与模板逐条对齐）
+# 采集时间: 2026-09-22
+# 采集方式: 容器内直接读取（hy-smi / rocm-smi / /proc / pip list / sha256sum），命令与输出见 logs/
+
+hardware:
+  card_model: "海光 DCU BW150"
+  card_count: 2
+  card_ids_used: [6, 7]          # 8 卡机器，只用 6、7 号卡；对应 PCIe 总线 0000:1b:00.0 / 0000:1e:00.0
+  card_did: 6320
+  card_vbios: "6.314.002400Q.998013"
+  card_memory_gb: 63.98          # 每卡
+  gcn_arch: "gfx936:sramecc+:xnack-"   # 关键：gfx936，非 gfx938，不支持 native FP8
+  interconnect_topology: "HCU6–HCU7 为 HSL 直连（rocm-smi --showtopo: 1 hop, Link Type = HSL），二者同在 NUMA Node 0；跨组（HCU0-3 ↔ HCU4-7）为 PCIe，2 hop"
+  cpu: "Hygon C86-4G (OPN: 7490)，255 核可见"
+  memory_gb: 750
+  storage: "overlay 根分区 3.5T（已用 1.1T）；/data 3.5T；/models 3.5T（独立 NVMe /dev/nvme1n1p1）"
+
+software:
+  os: "Ubuntu 22.04.5 LTS（容器内）"
+  kernel: "4.19.90-89.11.v2401.ky10.x86_64（宿主）"
+  driver_version: "6.4.0-V1.7.0.20260810"
+  dtk_version: "DTK-26.04-rc4"   # /opt/dtk/.dtk_version
+  image: "sglang:0.5.12-ubuntu22.04-dtk2604-py3.10"
+  image_note: "赛题指定的子赛道 B 镜像。容器内无法直接读取镜像 tag，容器 ID e465936377949c；容器内全部包的版本后缀均为 +das185.dtk2604.torch2100，与该镜像一致"
+
+framework:
+  name: sglang
+  version: "0.5.12+das185.dtk2604.torch2100.2608121934.gcbf025"
+  key_dependencies:
+    torch: "2.10.0+das.opt1.dtk2604.2608131652.g28498c"
+    triton: "3.6.0+das185.dtk2604.torch2100.2608131719.gb796b1"
+    transformers: 5.6.0
+    flash_attn: "2.8.3+das185.dtk2604.torch2100.2608132155.g9febea"
+    sglang_kernel: "0.4.2.post2+das185.dtk2604.torch2100.2608121934.gcbf025"
+    lightop: "0.6.0+das.dtk2604.torch2100.2608121706.g09a4f3"
+    aiter: "0.1.5+das185.dtk2604.torch2100.2608131714.gb0979d"
+    causal_conv1d: "1.5.4+das185.dtk2604.torch2100.2608131033.g44ef50"
+    numpy: 1.25.0
+  patch: "无框架/算子源码改动，故 patch/ 为空；全部优化通过启动参数与环境变量实现（见 config/ 与 run.sh）"
+
+model:
+  name: Qwen3.8-27B
+  arch: Qwen3_5ForConditionalGeneration
+  source: "未确认（/models 只读挂载，目录内无来源标记文件；具体下载渠道以主办方提供为准，本报告不作推断）"
+  local_path: /models/Qwen3.8-27B
+  weight_sha256_prefix8: "50851bab"     # 清单指纹：对全部 32 个文件的 "sha256  文件名" 行排序后拼接再取 sha256
+  weight_files: 18                      # 分片数；连同 config/tokenizer 等共 32 个文件纳入指纹
+  weight_sha256_detail: "logs/04_model_sha256.txt 给出每个文件的完整 sha256；首分片 model-00001-of-00018.safetensors = ba0ce20aae489ad196733da5064bcdf159a1fe84f53336648196e1ebb7751b1c"
+  precision: BF16
+  structure: "64 层 = 48 层 GDN 线性注意力 + 16 层 full attention（full_attention_interval=4）；内置 MTP 头（qwen3_5_mtp.py），用于 EAGLE 投机解码"
+
+run:
+  launch_script: "submit/scripts/run.sh"
+  key_env:
+    # —— 与第三方参考脚本一致的基础项 ——
+    HSA_FORCE_FINE_GRAIN_PCIE: 1
+    SGLANG_USE_CUDA_IPC_TRANSPORT: 1
+    SGLANG_USE_LIGHTOP: 1
+    SGLANG_ENABLE_SPEC_V2: 1
+    SGLANG_ALLOW_OVERWRITE_LONGER_CONTEXT_LEN: 1
+    NCCL_MIN_NCHANNELS: 16
+    NCCL_MAX_NCHANNELS: 16
+    ALLREDUCE_STREAM_WITH_COMPUTE: 1
+    # —— 本次优化新增（官方 HCU cookbook 配方 + 并发解锁）——
+    # 逐项与 run.sh 顶部的 export 段一致；运行进程的真实取值见 logs/06_final_runtime_env.txt
+    HIP_VISIBLE_DEVICES: "6,7"
+    SGLANG_USE_AITER_LINEAR_ATTN: 1
+    SGLANG_USE_CAUSAL_CONV1D: 1
+    SGLANG_USE_AITER_AR: 1
+    USE_HCU_CUSTOM_ALLREDUCE: 1
+    HIP_KERNEL_EVENT_SYSTENFENCE: 1
+    GLIBC_TUNABLES: "glibc.rtld.optional_static_tls=0x40000"
+    HIP_KERNEL_BATCH_CEILING: 100
+    GPU_FORCE_BLIT_COPY_SIZE: 16
+    HSA_KERNARG_POOL_SIZE: 8388608
+    ROC_AQL_QUEUE_SIZE: 131072
+    GPU_MAX_HW_QUEUES: 4
+    # —— 实测会崩溃、已剔除，切勿写回（详见 REPORT.md §3.7）——
+    # SGLANG_ENABLE_OVERLAP_PLAN_STREAM=1  -> fa3 未实现 update_verify_buffers_to_fill_after_draft，NotImplementedError
+    # SGLANG_USE_FUSED_RMS_ROTARY=1        -> 与 EAGLE 投机路径不兼容，CUDA graph 捕获时 RuntimeError
+    # 注意：上面两条在实验早期曾被写入本文件，是错的；以 run.sh 为准。
+
+benchmark:
+  tool: "sglang.bench_serving"
+  tool_version: "sglang 0.5.12 自带"
+  dataset_sharegpt: "ShareGPT_V3_unfiltered_cleaned_split.json（赛题指定数据文件）"
+  dataset_random: "bench_serving --dataset-name random（按固定长度随机生成 token 序列）"
+  concurrency_levels_sharegpt: [1, 4, 16, 32, 64]
+  concurrency_levels_random_4k: [1, 4, 8, 16, 32, 64]
+  concurrency_levels_random_64k: [1, 2, 3, 4, 5, 6]   # 两侧同口径 n=6（基线在 conc4 起不达标）
+  num_prompts: "conc1 用 100 条，其余档位 300 条（ShareGPT）；SLA 场景见各 probe 参数"
+  warmup_rounds: 5
+  sample_rounds: 3            # 基线与最终配置的 ShareGPT 全档位均为每档 3 轮；轮间不重启服务
+                              # 输出吞吐极差 <= 1.82%（容差 ±5%），逐轮原始日志见 logs/20_sharegpt_b2/ 与 logs/20_sharegpt_final/
+                              # SLA 与精度为单次全量测量（SLA 逐档一个数据点，精度 1314 题全量）
+  seed: 1
+  other: "--flush-cache 未启用（与官方脚本口径一致）；numa_balancing=0"

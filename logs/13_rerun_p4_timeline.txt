@@ -1,0 +1,44 @@
+# 补跑时间线
+# 生成于 2026-10-14 15:05:55
+######## 补跑开始 2026-10-14 13:24:38 ########
+################ A 基线 B2 启动（仅为补 GSM8K） @ 2026-10-14 13:24:38
+################ A.1 基线 GSM8K 全量 @ 2026-10-14 13:26:20
+################ A.2 基线 64K 容量墙取证（conc 4/5/6，n=6） @ 2026-10-14 13:34:52
+################ A.3 停基线服 @ 2026-10-14 13:40:39
+################ B 最终配置 C4 启动 @ 2026-10-14 13:40:49
+################ B.1 最终 4K/1K SLA 全档 @ 2026-10-14 13:42:21
+################ B.2 最终 64K/1K SLA（1..6，统一 n=6） @ 2026-10-14 13:51:14
+################ B.3 最终 ShareGPT 全档 3 轮 @ 2026-10-14 14:01:56
+=== final conc=1 round=1 n=100 start 14:01:56 ===
+=== final conc=1 round=1 done 14:08:07 ===
+=== final conc=4 round=1 n=300 start 14:08:07 ===
+=== final conc=4 round=1 done 14:13:37 ===
+=== final conc=16 round=1 n=300 start 14:13:37 ===
+=== final conc=16 round=1 done 14:16:27 ===
+=== final conc=32 round=1 n=300 start 14:16:27 ===
+=== final conc=32 round=1 done 14:18:43 ===
+=== final conc=64 round=1 n=300 start 14:18:43 ===
+=== final conc=64 round=1 done 14:20:47 ===
+=== final conc=1 round=2 n=100 start 14:20:47 ===
+=== final conc=1 round=2 done 14:27:04 ===
+=== final conc=4 round=2 n=300 start 14:27:04 ===
+=== final conc=4 round=2 done 14:32:39 ===
+=== final conc=16 round=2 n=300 start 14:32:39 ===
+=== final conc=16 round=2 done 14:35:29 ===
+=== final conc=32 round=2 n=300 start 14:35:29 ===
+=== final conc=32 round=2 done 14:37:58 ===
+=== final conc=64 round=2 n=300 start 14:37:58 ===
+=== final conc=64 round=2 done 14:40:03 ===
+=== final conc=1 round=3 n=100 start 14:40:03 ===
+=== final conc=1 round=3 done 14:46:15 ===
+=== final conc=4 round=3 n=300 start 14:46:15 ===
+=== final conc=4 round=3 done 14:51:51 ===
+=== final conc=16 round=3 n=300 start 14:51:51 ===
+=== final conc=16 round=3 done 14:54:46 ===
+=== final conc=32 round=3 n=300 start 14:54:46 ===
+=== final conc=32 round=3 done 14:57:04 ===
+=== final conc=64 round=3 n=300 start 14:57:04 ===
+=== final conc=64 round=3 done 14:59:07 ===
+GRID DONE final 2026-10-14 14:59:07
+################ B.4 最终 GSM8K 全量 @ 2026-10-14 14:59:07
+################ C 收尾：停服 + 生成时间线 @ 2026-10-14 15:05:47

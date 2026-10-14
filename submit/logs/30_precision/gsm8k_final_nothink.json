@@ -1,0 +1,20 @@
+{
+  "tag": "final",
+  "score": 0.9634703196347032,
+  "score_pct": 96.347,
+  "num_examples": 1314,
+  "num_shots": 5,
+  "thinking": false,
+  "reasoning_effort": null,
+  "temperature": 0.0,
+  "max_tokens": 8192,
+  "num_threads": 32,
+  "elapsed_sec": 364.6,
+  "threshold": 95.0,
+  "pass": true,
+  "usage_completion_tokens": {
+    "n": 1314,
+    "mean": 157.00380517503805,
+    "max": 5836
+  }
+}
