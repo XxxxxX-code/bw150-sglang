@@ -43,7 +43,6 @@
 | `submit/env_declare.yaml` | 环境声明（硬件/软件/框架/模型/运行/采集，按 §5.2 模板逐字段对齐） |
 | `submit/logs/` | **四类原始日志归档**（13 项，见下节） |
 | `submit/scripts/run.sh` | **一键复现启动脚本**，完整启动参数不省略任何 flag |
-| `viz/` | 可视化对比页（`index.html`，基线 vs 本方案逐档位对照） |
 | `logs/` `result/` `scripts/` | 上述归档的**上游原始工作区**，保留供溯源；内容与 `submit/` 内归档同源 |
 | `data/` | 数据集副本（ShareGPT_V3、GSM8K test） |
 
